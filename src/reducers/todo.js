@@ -104,3 +104,5 @@ const testToggleTodo = () => {
 testAddTodo();
 testToggleTodo();
 console.log('All tests passed!');
+
+export default todos;
