@@ -27085,27 +27085,80 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-/*
-const todoApp = (state = {}, action) => {
-    return {
-        todos: todos(
-            state.todos,
-            action
-        ),
-        visibilityFilter: visibilityFilter(
-            state.visibilityFilter,
-            action
-        )
-    }
-};
-*/
 var todoApp = (0, _redux.combineReducers)({
     todos: _todo2.default,
     visibilityFilter: _visibilityFilter2.default
 });
+
 var store = (0, _redux.createStore)(todoApp);
 
+/**
+ * Filter the list of selected todos
+ * @param {Array} todos Todos collection
+ * @param {string} filter Filter to be applied
+ * 
+ * @return {Array} Filtered todos
+ */
+var getVisibleTodos = function getVisibleTodos(todos, filter) {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_ACTIVE':
+            return todos.filter(function (t) {
+                return !t.completed;
+            });
+        case 'SHOW_COMPLETED':
+            return todos.filter(function (t) {
+                return t.completed;
+            });
+        default:
+            return todos;
+    }
+};
+
+/**
+ * @type {string}
+ * Todo Identifier
+ */
 var nextTodoId = 2;
+
+/**
+ * @extends {React.Component} 
+ */
+var FilterLink = function FilterLink(_ref) {
+    var filter = _ref.filter,
+        currentFilter = _ref.currentFilter,
+        children = _ref.children;
+
+    if (filter === currentFilter) {
+        return _react2.default.createElement(
+            'span',
+            null,
+            children
+        );
+    }
+
+    return _react2.default.createElement(
+        'a',
+        { href: '#',
+            onClick: function onClick(e) {
+                e.preventDefault();
+                store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    filter: filter
+                });
+            }
+        },
+        children
+    );
+};
+
+/**
+ * Main Application
+ * 
+ * @class TodoApp
+ * @extends {React.Component}
+ */
 
 var TodoApp = function (_Component) {
     _inherits(TodoApp, _Component);
@@ -27118,8 +27171,20 @@ var TodoApp = function (_Component) {
 
     _createClass(TodoApp, [{
         key: 'render',
+
+        /**
+         * Renders the TodoApp component into the DOM
+         * @abstract
+         */
         value: function render() {
             var _this2 = this;
+
+            var _props = this.props,
+                todos = _props.todos,
+                visibilityFilter = _props.visibilityFilter;
+
+
+            var visibleTodos = getVisibleTodos(todos, visibilityFilter);
 
             return _react2.default.createElement(
                 'div',
@@ -27143,7 +27208,7 @@ var TodoApp = function (_Component) {
                 _react2.default.createElement(
                     'ul',
                     null,
-                    this.props.todos.map(function (todo) {
+                    visibleTodos.map(function (todo) {
                         return _react2.default.createElement(
                             'li',
                             { key: todo.id,
@@ -27160,6 +27225,38 @@ var TodoApp = function (_Component) {
                             todo.text
                         );
                     })
+                ),
+                _react2.default.createElement(
+                    'p',
+                    null,
+                    'Show:',
+                    ' ',
+                    _react2.default.createElement(
+                        FilterLink,
+                        {
+                            filter: 'SHOW_ALL',
+                            currentFilter: visibilityFilter
+                        },
+                        'All'
+                    ),
+                    ' ',
+                    _react2.default.createElement(
+                        FilterLink,
+                        {
+                            filter: 'SHOW_ACTIVE',
+                            currentFilter: visibilityFilter
+                        },
+                        'Active'
+                    ),
+                    ' ',
+                    _react2.default.createElement(
+                        FilterLink,
+                        {
+                            filter: 'SHOW_COMPLETED',
+                            currentFilter: visibilityFilter
+                        },
+                        'Completed'
+                    )
                 )
             );
         }
@@ -27169,58 +27266,29 @@ var TodoApp = function (_Component) {
 }(_react.Component);
 
 var render = function render() {
-    _reactDom2.default.render(_react2.default.createElement(TodoApp, {
-        todos: store.getState().todos }), document.getElementById('root'));
+    _reactDom2.default.render(_react2.default.createElement(TodoApp, store.getState()), document.getElementById('root'));
 };
 
 store.subscribe(render);
 render();
 
-console.log('Initial state:');
-console.log(store.getState());
-console.log('--------------');
-
-console.log('Dispatching ADD_TODO.');
+// Populate Todo App
 store.dispatch({
     type: 'ADD_TODO',
     id: 0,
     text: 'Learn Redux'
 });
 
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
-
-console.log('Dispatching ADD_TODO.');
 store.dispatch({
     type: 'ADD_TODO',
     id: 1,
     text: 'Learn React'
 });
 
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
-
-console.log('Dispatching TOGGLE_TODO.');
 store.dispatch({
     type: 'TOGGLE_TODO',
     id: 1
 });
-
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
-
-console.log('Dispatching SET_VISIBILITY_FILTER.');
-store.dispatch({
-    type: 'SET_VISIBILITY_FILTER',
-    filter: 'SHOW_COMPLETED'
-});
-
-console.log('Current state:');
-console.log(store.getState());
-console.log('--------------');
 
 /***/ })
 /******/ ]);
