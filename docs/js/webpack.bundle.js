@@ -27057,9 +27057,9 @@ module.exports = function(module) {
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _todo = __webpack_require__(94);
 
@@ -27147,11 +27147,64 @@ var Todo = function Todo(_ref) {
 };
 
 /**
+ * TodoList Container component
+ * 
+ * @class VisibleTodoList
+ * @extends {Component}
+ */
+
+var VisibleTodoList = function (_Component) {
+    _inherits(VisibleTodoList, _Component);
+
+    function VisibleTodoList() {
+        _classCallCheck(this, VisibleTodoList);
+
+        return _possibleConstructorReturn(this, (VisibleTodoList.__proto__ || Object.getPrototypeOf(VisibleTodoList)).apply(this, arguments));
+    }
+
+    _createClass(VisibleTodoList, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.unsubscribe = store.subscribe(function () {
+                return _this2.forceUpdate();
+            });
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this.unsubscribe();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var props = this.props;
+            var state = store.getState();
+
+            return _react2.default.createElement(TodoList, {
+                todos: getVisibleTodos(state.todos, state.visibilityFilter),
+                onTodoClick: function onTodoClick(id) {
+                    store.dispatch({
+                        type: 'TOGGLE_TODO',
+                        id: id
+                    });
+                }
+            });
+        }
+    }]);
+
+    return VisibleTodoList;
+}(_react.Component);
+
+/**
  * Todos collection (presentational component)
  * 
  * @param {Array} todos
  * @param {Event} onTodoClick
  */
+
+
 var TodoList = function TodoList(_ref2) {
     var todos = _ref2.todos,
         onTodoClick = _ref2.onTodoClick;
@@ -27205,8 +27258,8 @@ var Link = function Link(_ref3) {
  * @extends {Component}
  */
 
-var FilterLink = function (_Component) {
-    _inherits(FilterLink, _Component);
+var FilterLink = function (_Component2) {
+    _inherits(FilterLink, _Component2);
 
     function FilterLink() {
         _classCallCheck(this, FilterLink);
@@ -27217,10 +27270,10 @@ var FilterLink = function (_Component) {
     _createClass(FilterLink, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this2 = this;
+            var _this4 = this;
 
             this.unsubscribe = store.subscribe(function () {
-                return _this2.forceUpdate();
+                return _this4.forceUpdate();
             });
         }
     }, {
@@ -27293,9 +27346,10 @@ var Footer = function Footer() {
     );
 };
 
-var AddTodo = function AddTodo(_ref4) {
-    var onAddClick = _ref4.onAddClick;
-
+/**
+ * Presentational component
+ */
+var AddTodo = function AddTodo() {
     var input = void 0;
 
     return _react2.default.createElement(
@@ -27307,7 +27361,11 @@ var AddTodo = function AddTodo(_ref4) {
         _react2.default.createElement(
             'button',
             { onClick: function onClick() {
-                    onAddClick(input.value);
+                    store.dispatch({
+                        type: 'ADD_TODO',
+                        text: input.value,
+                        id: nextTodoId++
+                    });
                     input.value = '';
                 } },
             'Add todo'
@@ -27321,39 +27379,18 @@ var AddTodo = function AddTodo(_ref4) {
  * @class TodoApp
  * @extends {React.Component}
  */
-var TodoApp = function TodoApp(_ref5) {
-    var todos = _ref5.todos,
-        visibilityFilter = _ref5.visibilityFilter;
+var TodoApp = function TodoApp() {
     return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(AddTodo, {
-            onAddClick: function onAddClick(text) {
-                store.dispatch({
-                    type: 'ADD_TODO',
-                    text: text,
-                    id: nextTodoId++
-                });
-            }
-        }),
-        _react2.default.createElement(TodoList, {
-            todos: getVisibleTodos(todos, visibilityFilter),
-            onTodoClick: function onTodoClick(id) {
-                store.dispatch({
-                    type: 'TOGGLE_TODO',
-                    id: id
-                });
-            }
-        }),
-        _react2.default.createElement(Footer, {
-            visibilityFilter: visibilityFilter,
-            onFilterClick: function onFilterClick(filter) {}
-        })
+        _react2.default.createElement(AddTodo, null),
+        _react2.default.createElement(VisibleTodoList, null),
+        _react2.default.createElement(Footer, null)
     );
 };
 
 var render = function render() {
-    _reactDom2.default.render(_react2.default.createElement(TodoApp, store.getState()), document.getElementById('root'));
+    _reactDom2.default.render(_react2.default.createElement(TodoApp, null), document.getElementById('root'));
 };
 
 store.subscribe(render);
