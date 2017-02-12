@@ -47,30 +47,6 @@ const getVisibleTodos = (
 let nextTodoId = 2;
 
 /**
- * @extends {React.Component} 
- */
-const FilterLink = ({
-    filter,
-    currentFilter,
-    onClick,
-    children
-}) => {
-    if (filter === currentFilter) {
-        return <span>{children}</span>;
-    }
-
-    return (
-        <a href="#"
-            onClick={ e => {
-                e.preventDefault();
-                onClick(filter);
-            }}
-        >{children}
-        </a>
-    );
-};
-
-/**
  * Todo Item (presentational component)
  * @param {Object} todo
  * @param {boolean} completed
@@ -115,33 +91,93 @@ const TodoList = ({
     </ul>
 );
 
-const Footer = ({
-    visibilityFilter,
-    onFilterClick
-}) => (
+/**
+ * @extends {React.Component} 
+ */
+const Link = ({
+    active,
+    onClick,
+    children
+}) => {
+    if (active) {
+        return <span>{children}</span>;
+    }
+
+    return (
+        <a href="#"
+            onClick={ e => {
+                e.preventDefault();
+                onClick();
+            }}
+        >{children}
+        </a>
+    );
+};
+
+/**
+ * Filter link Container
+ * 
+ * @class FilterLink
+ * @extends {Component}
+ */
+class FilterLink extends Component {
+    componentDidMount() {
+        this.unsubscribe = store.subscribe(() =>
+            this.forceUpdate()
+        );
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    render() {
+        const props = this.props;
+        const state = store.getState();
+
+        return (
+            <Link
+                active={
+                    props.filter === 
+                    state.visibilityFilter
+                }
+                onClick={() =>
+                    store.dispatch({
+                        type: 'SET_VISIBILITY_FILTER',
+                        filter: props.filter
+                    })
+                }
+            >
+                {props.children}
+            </Link>
+        );
+    }
+}
+
+/**
+ * Footer component (presentational component)
+ * 
+ * @param {String} visibilityFilter
+ * @param {Event} onFilterClick
+ */
+const Footer = () => (
     <p>
         Show:
         {' '}
         <FilterLink
             filter='SHOW_ALL'
-            onClick={onFilterClick}
-            currentFilter={visibilityFilter}
         >
             All
         </FilterLink>
         {' '}
         <FilterLink
             filter='SHOW_ACTIVE'
-            onClick={onFilterClick}
-            currentFilter={visibilityFilter}
         >
             Active
         </FilterLink>
         {' '}
         <FilterLink
             filter='SHOW_COMPLETED'
-            onClick={onFilterClick}
-            currentFilter={visibilityFilter}
         >
             Completed
         </FilterLink>
@@ -203,10 +239,7 @@ const TodoApp = ({
         <Footer
             visibilityFilter={visibilityFilter}
             onFilterClick={filter => {
-                store.dispatch({
-                    type: 'SET_VISIBILITY_FILTER',
-                    filter
-                });
+                
             }}
         />
     </div>

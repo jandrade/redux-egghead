@@ -27057,6 +27057,8 @@ module.exports = function(module) {
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _todo = __webpack_require__(94);
@@ -27078,6 +27080,12 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 var _redux = __webpack_require__(98);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var todoApp = (0, _redux.combineReducers)({
     todos: _todo2.default,
@@ -27117,44 +27125,15 @@ var getVisibleTodos = function getVisibleTodos(todos, filter) {
 var nextTodoId = 2;
 
 /**
- * @extends {React.Component} 
- */
-var FilterLink = function FilterLink(_ref) {
-    var filter = _ref.filter,
-        currentFilter = _ref.currentFilter,
-        _onClick = _ref.onClick,
-        children = _ref.children;
-
-    if (filter === currentFilter) {
-        return _react2.default.createElement(
-            'span',
-            null,
-            children
-        );
-    }
-
-    return _react2.default.createElement(
-        'a',
-        { href: '#',
-            onClick: function onClick(e) {
-                e.preventDefault();
-                _onClick(filter);
-            }
-        },
-        children
-    );
-};
-
-/**
  * Todo Item (presentational component)
  * @param {Object} todo
  * @param {boolean} completed
  * @param {String} text
  */
-var Todo = function Todo(_ref2) {
-    var onClick = _ref2.onClick,
-        completed = _ref2.completed,
-        text = _ref2.text;
+var Todo = function Todo(_ref) {
+    var onClick = _ref.onClick,
+        completed = _ref.completed,
+        text = _ref.text;
     return _react2.default.createElement(
         'li',
         {
@@ -27173,9 +27152,9 @@ var Todo = function Todo(_ref2) {
  * @param {Array} todos
  * @param {Event} onTodoClick
  */
-var TodoList = function TodoList(_ref3) {
-    var todos = _ref3.todos,
-        onTodoClick = _ref3.onTodoClick;
+var TodoList = function TodoList(_ref2) {
+    var todos = _ref2.todos,
+        onTodoClick = _ref2.onTodoClick;
     return _react2.default.createElement(
         'ul',
         null,
@@ -27191,9 +27170,98 @@ var TodoList = function TodoList(_ref3) {
     );
 };
 
-var Footer = function Footer(_ref4) {
-    var visibilityFilter = _ref4.visibilityFilter,
-        onFilterClick = _ref4.onFilterClick;
+/**
+ * @extends {React.Component} 
+ */
+var Link = function Link(_ref3) {
+    var active = _ref3.active,
+        _onClick = _ref3.onClick,
+        children = _ref3.children;
+
+    if (active) {
+        return _react2.default.createElement(
+            'span',
+            null,
+            children
+        );
+    }
+
+    return _react2.default.createElement(
+        'a',
+        { href: '#',
+            onClick: function onClick(e) {
+                e.preventDefault();
+                _onClick();
+            }
+        },
+        children
+    );
+};
+
+/**
+ * Filter link Container
+ * 
+ * @class FilterLink
+ * @extends {Component}
+ */
+
+var FilterLink = function (_Component) {
+    _inherits(FilterLink, _Component);
+
+    function FilterLink() {
+        _classCallCheck(this, FilterLink);
+
+        return _possibleConstructorReturn(this, (FilterLink.__proto__ || Object.getPrototypeOf(FilterLink)).apply(this, arguments));
+    }
+
+    _createClass(FilterLink, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.unsubscribe = store.subscribe(function () {
+                return _this2.forceUpdate();
+            });
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this.unsubscribe();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var props = this.props;
+            var state = store.getState();
+
+            return _react2.default.createElement(
+                Link,
+                {
+                    active: props.filter === state.visibilityFilter,
+                    onClick: function onClick() {
+                        return store.dispatch({
+                            type: 'SET_VISIBILITY_FILTER',
+                            filter: props.filter
+                        });
+                    }
+                },
+                props.children
+            );
+        }
+    }]);
+
+    return FilterLink;
+}(_react.Component);
+
+/**
+ * Footer component (presentational component)
+ * 
+ * @param {String} visibilityFilter
+ * @param {Event} onFilterClick
+ */
+
+
+var Footer = function Footer() {
     return _react2.default.createElement(
         'p',
         null,
@@ -27202,9 +27270,7 @@ var Footer = function Footer(_ref4) {
         _react2.default.createElement(
             FilterLink,
             {
-                filter: 'SHOW_ALL',
-                onClick: onFilterClick,
-                currentFilter: visibilityFilter
+                filter: 'SHOW_ALL'
             },
             'All'
         ),
@@ -27212,9 +27278,7 @@ var Footer = function Footer(_ref4) {
         _react2.default.createElement(
             FilterLink,
             {
-                filter: 'SHOW_ACTIVE',
-                onClick: onFilterClick,
-                currentFilter: visibilityFilter
+                filter: 'SHOW_ACTIVE'
             },
             'Active'
         ),
@@ -27222,17 +27286,15 @@ var Footer = function Footer(_ref4) {
         _react2.default.createElement(
             FilterLink,
             {
-                filter: 'SHOW_COMPLETED',
-                onClick: onFilterClick,
-                currentFilter: visibilityFilter
+                filter: 'SHOW_COMPLETED'
             },
             'Completed'
         )
     );
 };
 
-var AddTodo = function AddTodo(_ref5) {
-    var onAddClick = _ref5.onAddClick;
+var AddTodo = function AddTodo(_ref4) {
+    var onAddClick = _ref4.onAddClick;
 
     var input = void 0;
 
@@ -27259,9 +27321,9 @@ var AddTodo = function AddTodo(_ref5) {
  * @class TodoApp
  * @extends {React.Component}
  */
-var TodoApp = function TodoApp(_ref6) {
-    var todos = _ref6.todos,
-        visibilityFilter = _ref6.visibilityFilter;
+var TodoApp = function TodoApp(_ref5) {
+    var todos = _ref5.todos,
+        visibilityFilter = _ref5.visibilityFilter;
     return _react2.default.createElement(
         'div',
         null,
@@ -27285,12 +27347,7 @@ var TodoApp = function TodoApp(_ref6) {
         }),
         _react2.default.createElement(Footer, {
             visibilityFilter: visibilityFilter,
-            onFilterClick: function onFilterClick(filter) {
-                store.dispatch({
-                    type: 'SET_VISIBILITY_FILTER',
-                    filter: filter
-                });
-            }
+            onFilterClick: function onFilterClick(filter) {}
         })
     );
 };
