@@ -1,9 +1,9 @@
 var path = require('path');
 
 module.exports = {
-  entry: './index.js',
+  entry: './src/todoApp.js',
   output: {
-    path: path.resolve(__dirname, 'examples/js/'),
+    path: path.resolve(__dirname, 'docs/js/'),
     filename: 'webpack.bundle.js'
   },
   module: {
