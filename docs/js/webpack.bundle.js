@@ -27092,8 +27092,6 @@ var todoApp = (0, _redux.combineReducers)({
     visibilityFilter: _visibilityFilter2.default
 });
 
-var store = (0, _redux.createStore)(todoApp);
-
 /**
  * Filter the list of selected todos
  * @param {Array} todos Todos collection
@@ -27167,6 +27165,8 @@ var VisibleTodoList = function (_Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
+            var store = this.props.store;
+
             this.unsubscribe = store.subscribe(function () {
                 return _this2.forceUpdate();
             });
@@ -27179,7 +27179,8 @@ var VisibleTodoList = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var props = this.props;
+            var store = this.props.store;
+
             var state = store.getState();
 
             return _react2.default.createElement(TodoList, {
@@ -27272,6 +27273,8 @@ var FilterLink = function (_Component2) {
         value: function componentDidMount() {
             var _this4 = this;
 
+            var store = this.props.store;
+
             this.unsubscribe = store.subscribe(function () {
                 return _this4.forceUpdate();
             });
@@ -27285,6 +27288,8 @@ var FilterLink = function (_Component2) {
         key: 'render',
         value: function render() {
             var props = this.props;
+            var store = props.store;
+
             var state = store.getState();
 
             return _react2.default.createElement(
@@ -27314,7 +27319,8 @@ var FilterLink = function (_Component2) {
  */
 
 
-var Footer = function Footer() {
+var Footer = function Footer(_ref4) {
+    var store = _ref4.store;
     return _react2.default.createElement(
         'p',
         null,
@@ -27323,7 +27329,8 @@ var Footer = function Footer() {
         _react2.default.createElement(
             FilterLink,
             {
-                filter: 'SHOW_ALL'
+                filter: 'SHOW_ALL',
+                store: store
             },
             'All'
         ),
@@ -27331,7 +27338,8 @@ var Footer = function Footer() {
         _react2.default.createElement(
             FilterLink,
             {
-                filter: 'SHOW_ACTIVE'
+                filter: 'SHOW_ACTIVE',
+                store: store
             },
             'Active'
         ),
@@ -27339,7 +27347,8 @@ var Footer = function Footer() {
         _react2.default.createElement(
             FilterLink,
             {
-                filter: 'SHOW_COMPLETED'
+                filter: 'SHOW_COMPLETED',
+                store: store
             },
             'Completed'
         )
@@ -27349,7 +27358,9 @@ var Footer = function Footer() {
 /**
  * Presentational component
  */
-var AddTodo = function AddTodo() {
+var AddTodo = function AddTodo(_ref5) {
+    var store = _ref5.store;
+
     var input = void 0;
 
     return _react2.default.createElement(
@@ -27379,24 +27390,27 @@ var AddTodo = function AddTodo() {
  * @class TodoApp
  * @extends {React.Component}
  */
-var TodoApp = function TodoApp() {
+var TodoApp = function TodoApp(_ref6) {
+    var store = _ref6.store;
     return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(AddTodo, null),
-        _react2.default.createElement(VisibleTodoList, null),
-        _react2.default.createElement(Footer, null)
+        _react2.default.createElement(AddTodo, { store: store }),
+        _react2.default.createElement(VisibleTodoList, { store: store }),
+        _react2.default.createElement(Footer, { store: store })
     );
 };
 
 var render = function render() {
-    _reactDom2.default.render(_react2.default.createElement(TodoApp, null), document.getElementById('root'));
+    _reactDom2.default.render(_react2.default.createElement(TodoApp, {
+        store: (0, _redux.createStore)(todoApp)
+    }), document.getElementById('root'));
 };
 
-store.subscribe(render);
 render();
 
 // Populate Todo App
+/*
 store.dispatch({
     type: 'ADD_TODO',
     id: 0,
@@ -27413,6 +27427,7 @@ store.dispatch({
     type: 'TOGGLE_TODO',
     id: 1
 });
+*/
 
 /***/ })
 /******/ ]);
