@@ -3,6 +3,7 @@ import visibilityFilter from './reducers/visibilityFilter';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
 import { combineReducers, createStore } from 'redux';
 
@@ -274,22 +275,6 @@ const todoApp = combineReducers({
     todos,
     visibilityFilter
 });
-
-class Provider extends Component {
-    getChildContext() {
-        return {
-            store: this.props.store
-        }
-    }
-
-    render() {
-        return this.props.children;
-    }
-}
-
-Provider.childContextTypes = {
-    store: React.PropTypes.object
-};
 
 const render = () => {
     ReactDOM.render(
