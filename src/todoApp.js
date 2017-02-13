@@ -3,7 +3,7 @@ import visibilityFilter from './reducers/visibilityFilter';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 
 import { combineReducers, createStore } from 'redux';
 
@@ -58,47 +58,24 @@ const Todo = ({
     </li>
 );
 
-/**
- * TodoList Container component
- * 
- * @class VisibleTodoList
- * @extends {Component}
- */
-class VisibleTodoList extends Component {
-    componentDidMount() {
-        const { store } = this.context;
-        this.unsubscribe = store.subscribe(() => 
-            this.forceUpdate()
-        );
+const mapStateToProps = (state) => {
+    return {
+        todos: getVisibleTodos(
+            state.todos,
+            state.visibilityFilter
+        )
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onTodoClick: (id) => {
+            dispatch({
+                type: 'TOGGLE_TODO',
+                id
+            });
+        }
     }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    render() {
-        const { store } = this.context;
-        const state = store.getState();
-
-        return (
-            <TodoList
-                todos={getVisibleTodos(
-                    state.todos,
-                    state.visibilityFilter
-                )}
-                onTodoClick={id => {
-                    store.dispatch({
-                        type: 'TOGGLE_TODO',
-                        id
-                    });
-                }}
-            />
-        );
-    }
-}
-
-VisibleTodoList.contextTypes = {
-    store: React.PropTypes.object
 };
 
 /**
@@ -121,6 +98,14 @@ const TodoList = ({
         )}
     </ul>
 );
+
+/**
+ * TodoList Container component 
+ */
+const VisibleTodoList = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TodoList);
 
 /**
  * @extends {React.Component} 

@@ -27057,9 +27057,9 @@ module.exports = function(module) {
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _todo = __webpack_require__(94);
 
@@ -27135,62 +27135,21 @@ var Todo = function Todo(_ref) {
     );
 };
 
-/**
- * TodoList Container component
- * 
- * @class VisibleTodoList
- * @extends {Component}
- */
+var mapStateToProps = function mapStateToProps(state) {
+    return {
+        todos: getVisibleTodos(state.todos, state.visibilityFilter)
+    };
+};
 
-var VisibleTodoList = function (_Component) {
-    _inherits(VisibleTodoList, _Component);
-
-    function VisibleTodoList() {
-        _classCallCheck(this, VisibleTodoList);
-
-        return _possibleConstructorReturn(this, (VisibleTodoList.__proto__ || Object.getPrototypeOf(VisibleTodoList)).apply(this, arguments));
-    }
-
-    _createClass(VisibleTodoList, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _this2 = this;
-
-            var store = this.context.store;
-
-            this.unsubscribe = store.subscribe(function () {
-                return _this2.forceUpdate();
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+    return {
+        onTodoClick: function onTodoClick(id) {
+            dispatch({
+                type: 'TOGGLE_TODO',
+                id: id
             });
         }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            this.unsubscribe();
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var store = this.context.store;
-
-            var state = store.getState();
-
-            return _react2.default.createElement(TodoList, {
-                todos: getVisibleTodos(state.todos, state.visibilityFilter),
-                onTodoClick: function onTodoClick(id) {
-                    store.dispatch({
-                        type: 'TOGGLE_TODO',
-                        id: id
-                    });
-                }
-            });
-        }
-    }]);
-
-    return VisibleTodoList;
-}(_react.Component);
-
-VisibleTodoList.contextTypes = {
-    store: _react2.default.PropTypes.object
+    };
 };
 
 /**
@@ -27216,6 +27175,11 @@ var TodoList = function TodoList(_ref2) {
         })
     );
 };
+
+/**
+ * TodoList Container component 
+ */
+var VisibleTodoList = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TodoList);
 
 /**
  * @extends {React.Component} 
@@ -27252,8 +27216,8 @@ var Link = function Link(_ref3) {
  * @extends {Component}
  */
 
-var FilterLink = function (_Component2) {
-    _inherits(FilterLink, _Component2);
+var FilterLink = function (_Component) {
+    _inherits(FilterLink, _Component);
 
     function FilterLink() {
         _classCallCheck(this, FilterLink);
@@ -27264,12 +27228,12 @@ var FilterLink = function (_Component2) {
     _createClass(FilterLink, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this4 = this;
+            var _this2 = this;
 
             var store = this.context.store;
 
             this.unsubscribe = store.subscribe(function () {
-                return _this4.forceUpdate();
+                return _this2.forceUpdate();
             });
         }
     }, {
