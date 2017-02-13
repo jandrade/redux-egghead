@@ -1,29 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-const mapStateToProps = (
-    state,
-    ownProps
-) => {
-    return {
-        active: ownProps.filter === state.visibilityFilter
-    };
-};
-
-const mapDispatchToProps = ({
-    dispatch,
-    ownProps
-}) => {
-    return {
-        onClick: () =>
-            store.dispatch({
-                type: 'SET_VISIBILITY_FILTER',
-                filter: ownProps.filter
-            }) 
-    }
-}
+import setVisibilityFilter from '../actions/setVisibilityFilter';
 
 /**
+ * Link presentational component
  * @extends {React.Component} 
  */
 const Link = ({
@@ -44,6 +25,25 @@ const Link = ({
         >{children}
         </a>
     );
+};
+
+const mapStateToProps = (
+    state,
+    ownProps
+) => {
+    return {
+        active: ownProps.filter === state.visibilityFilter
+    };
+};
+
+const mapDispatchToProps = (
+    dispatch,
+    ownProps
+) => {
+    return {
+        onClick: () =>
+            dispatch(setVisibilityFilter(ownProps.filter)) 
+    }
 };
 
 /**

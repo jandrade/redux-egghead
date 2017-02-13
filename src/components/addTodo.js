@@ -1,36 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-/**
- * @type {string}
- * Todo Identifier
- */
-let nextTodoId = 0;
-
-
-const mapStateToProps = (
-    state
-) => {
-    return {
-        todos: getVisibleTodos(
-            state.todos,
-            state.visibilityFilter
-        )
-    };
-};
-
-const mapDispatchToProps = (
-    dispatch
-) => {
-    return {
-        onTodoClick: (id) => {
-            dispatch({
-                type: 'TOGGLE_TODO',
-                id
-            });
-        }
-    }
-};
+import addTodo from '../actions/addTodo';
 
 /**
  * Presentational component
@@ -44,11 +15,7 @@ let AddTodo = ({ dispatch }) => {
                 input = node;
             }} />
             <button onClick={() => {
-                dispatch({
-                    type: 'ADD_TODO',
-                    text: input.value,
-                    id: nextTodoId++
-                });
+                dispatch(addTodo(input.value));
                 input.value = '';
             }}>
                 Add todo

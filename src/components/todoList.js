@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Todo from './todo';
+import toggleTodo from '../actions/toggleTodo';
 
 /**
  * Filter the list of selected todos
@@ -46,10 +47,7 @@ const mapDispatchToProps = (
 ) => {
     return {
         onTodoClick: (id) => {
-            dispatch({
-                type: 'TOGGLE_TODO',
-                id
-            });
+            dispatch(toggleTodo(id));
         }
     }
 };
