@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Todo from './todo';
-import toggleTodo from '../actions/toggleTodo';
+import { toggleTodo } from '../actions/todo';
 
 /**
  * Filter the list of selected todos

@@ -4,7 +4,7 @@
  */
 let nextTodoId = 0;
 
-const addTodo = (text) => {
+export const addTodo = (text) => {
     return {
         type: 'ADD_TODO',
         text: text,
@@ -12,4 +12,10 @@ const addTodo = (text) => {
     };
 };
 
-export default addTodo;
+
+export const toggleTodo = (id) => {
+    return {
+        type: 'TOGGLE_TODO',
+        id
+    };
+};

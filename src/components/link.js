@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import setVisibilityFilter from '../actions/setVisibilityFilter';
+import setVisibilityFilter from '../actions/visibilityFilter';
 
 /**
  * Link presentational component
