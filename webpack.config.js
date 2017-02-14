@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  entry: './src/todoApp.js',
+  entry: './src/index.js',
   devtool: 'cheap-source-map',
   output: {
     path: path.resolve(__dirname, 'docs/js/'),

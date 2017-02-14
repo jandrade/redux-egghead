@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import FilterLink from './link';
+import FilterLink from './FilterLink';
 
 /**
  * Footer component (presentational component)
