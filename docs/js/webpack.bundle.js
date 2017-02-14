@@ -22896,10 +22896,20 @@ var TodoApp = function TodoApp() {
 // reducers
 
 
+var persistedState = {
+    todos: [{
+        id: 0,
+        text: 'Welcome back!',
+        completed: false
+    }]
+};
+
+var store = (0, _redux.createStore)(_index2.default, persistedState);
+
 var render = function render() {
     _reactDom2.default.render(_react2.default.createElement(
         _reactRedux.Provider,
-        { store: (0, _redux.createStore)(_index2.default) },
+        { store: store },
         _react2.default.createElement(TodoApp, null)
     ), document.getElementById('root'));
 };
@@ -24398,7 +24408,7 @@ var addTodo = exports.addTodo = function addTodo(text) {
     return {
         type: 'ADD_TODO',
         text: text,
-        id: nextTodoId++
+        id: (nextTodoId++).toString()
     };
 };
 
@@ -24419,14 +24429,12 @@ var toggleTodo = exports.toggleTodo = function toggleTodo(id) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var setVisibilityFilter = function setVisibilityFilter(filter) {
+var setVisibilityFilter = exports.setVisibilityFilter = function setVisibilityFilter(filter) {
     return {
         type: 'SET_VISIBILITY_FILTER',
         filter: filter
     };
 };
-
-exports.default = setVisibilityFilter;
 
 /***/ })
 /******/ ]);

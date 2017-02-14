@@ -8,7 +8,7 @@ import AddTodo from './components/addTodo';
 import VisibleTodoList from './components/todoList';
 import Footer from './components/footer';
 // reducers
-import reducers from './reducers/index';
+import rootReducer from './reducers/index';
 
 /**
  * Main Application
@@ -24,9 +24,24 @@ const TodoApp = () => (
     </div>
 );
 
+const persistedState = {
+    todos: [
+        {
+            id: 0,
+            text: 'Welcome back!',
+            completed: false
+        }
+    ]
+};
+
+const store = createStore(
+    rootReducer,
+    persistedState
+);
+
 const render = () => {
     ReactDOM.render(
-        <Provider store={createStore(reducers)}>
+        <Provider store={store}>
             <TodoApp />
         </Provider>
         ,
