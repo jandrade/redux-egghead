@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom';
 import { connect, Provider } from 'react-redux';
 import { createStore } from 'redux';
 
+import throttle from 'lodash/throttle';
+
 // components
 import AddTodo from './components/addTodo';
 import VisibleTodoList from './components/todoList';
 import Footer from './components/footer';
 // reducers
 import rootReducer from './reducers/index';
+
+import { loadState, saveState } from './helpers/localStorage';
 
 /**
  * Main Application
@@ -24,20 +28,18 @@ const TodoApp = () => (
     </div>
 );
 
-const persistedState = {
-    todos: [
-        {
-            id: 0,
-            text: 'Welcome back!',
-            completed: false
-        }
-    ]
-};
+const persistedState = loadState();
 
 const store = createStore(
     rootReducer,
     persistedState
 );
+
+store.subscribe(throttle(() => {
+    saveState({
+        todos: store.getState().todos
+    });
+}, 1000));
 
 const render = () => {
     ReactDOM.render(
