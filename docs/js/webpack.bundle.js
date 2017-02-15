@@ -46856,19 +46856,9 @@ var _reactDom = __webpack_require__(162);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _reactRedux = __webpack_require__(32);
+var _Root = __webpack_require__(380);
 
-var _AddTodo = __webpack_require__(158);
-
-var _AddTodo2 = _interopRequireDefault(_AddTodo);
-
-var _VisibleTodoList = __webpack_require__(379);
-
-var _VisibleTodoList2 = _interopRequireDefault(_VisibleTodoList);
-
-var _Footer = __webpack_require__(159);
-
-var _Footer2 = _interopRequireDefault(_Footer);
+var _Root2 = _interopRequireDefault(_Root);
 
 var _configureStore = __webpack_require__(161);
 
@@ -46876,36 +46866,13 @@ var _configureStore2 = _interopRequireDefault(_configureStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Main Application
- * 
- * @class TodoApp
- * @extends {React.Component}
- */
-
-
-// components
-var TodoApp = function TodoApp() {
-    return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_AddTodo2.default, null),
-        _react2.default.createElement(_VisibleTodoList2.default, null),
-        _react2.default.createElement(_Footer2.default, null)
-    );
-};
+var store = (0, _configureStore2.default)();
 
 // store
 
 
-var store = (0, _configureStore2.default)();
-
 var render = function render() {
-    _reactDom2.default.render(_react2.default.createElement(
-        _reactRedux.Provider,
-        { store: store },
-        _react2.default.createElement(TodoApp, null)
-    ), document.getElementById('root'));
+    _reactDom2.default.render(_react2.default.createElement(_Root2.default, { store: store }), document.getElementById('root'));
 };
 
 render();
@@ -47023,6 +46990,88 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var VisibleTodoList = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_TodoList2.default);
 
 exports.default = VisibleTodoList;
+
+/***/ }),
+/* 380 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(17);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(32);
+
+var _App = __webpack_require__(381);
+
+var _App2 = _interopRequireDefault(_App);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Root = function Root(_ref) {
+    var store = _ref.store;
+    return _react2.default.createElement(
+        _reactRedux.Provider,
+        { store: store },
+        _react2.default.createElement(_App2.default, null)
+    );
+};
+
+exports.default = Root;
+
+/***/ }),
+/* 381 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(17);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _AddTodo = __webpack_require__(158);
+
+var _AddTodo2 = _interopRequireDefault(_AddTodo);
+
+var _VisibleTodoList = __webpack_require__(379);
+
+var _VisibleTodoList2 = _interopRequireDefault(_VisibleTodoList);
+
+var _Footer = __webpack_require__(159);
+
+var _Footer2 = _interopRequireDefault(_Footer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Main Application
+ * 
+ * @class App
+ * @extends {React.Component}
+ */
+var App = function App() {
+    return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_AddTodo2.default, null),
+        _react2.default.createElement(_VisibleTodoList2.default, null),
+        _react2.default.createElement(_Footer2.default, null)
+    );
+};
+
+// components
+exports.default = App;
 
 /***/ })
 /******/ ]);
