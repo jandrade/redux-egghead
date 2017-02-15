@@ -11,12 +11,10 @@ import Footer from './Footer';
  * @class App
  * @extends {React.Component}
  */
-const App = ({
-    params
-}) => (
+const App = () => (
     <div>
         <AddTodo />
-        <VisibleTodoList filter={params.filter || 'all'} />
+        <VisibleTodoList />
         <Footer />
     </div>
 );
