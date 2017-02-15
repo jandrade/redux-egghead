@@ -5,9 +5,6 @@ import FilterLink from './FilterLink';
 
 /**
  * Footer component (presentational component)
- * 
- * @param {String} visibilityFilter
- * @param {Event} onFilterClick
  */
 const Footer = () => (
     <p>

@@ -1,14 +1,12 @@
 import { combineReducers } from 'redux';
 
 import todos from './todo';
-import visibilityFilter from './visibilityFilter';
 
 /**
  * Root reducers
  */
 const reducers = combineReducers({
-    todos,
-    visibilityFilter
+    todos
 });
 
 export default reducers;

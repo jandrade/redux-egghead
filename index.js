@@ -1,41 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
-import counter from './src/counter';
+import path from 'path';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import config from './webpack.config';
+import Express from 'express';
 
-const store = createStore(counter);
+const app = new Express();
+const PORT = 3000;
 
-const Counter = ({
-    value,
-    onIncrement,
-    onDecrement
-}) => (
-    <div>
-        <h1>{value}</h1>
-        <button onClick={onIncrement}>+</button>
-        <button onClick={onDecrement}>-</button>
-    </div>
-);
+const compiler = webpack(config);
+app.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath
+}));
 
-const render = () => {
-    ReactDOM.render(
-        <Counter
-            value={store.getState()}
-            onIncrement={() => {
-                store.dispatch({
-                    type: 'INCREMENT'
-                })
-            }}
-            onDecrement={() => {
-                store.dispatch({
-                    type: 'DECREMENT'
-                })
-            }}
-        />,
-        document.getElementById('root')
-    )
-};
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'docs/index.html'));
+});
 
-store.subscribe(render);
-
-render();
+app.listen(PORT, error => {
+    if (error) {
+        console.error(error);
+    } else {
+        console.info(
+            'Listening on port %s.',
+            PORT
+        );
+    }
+});

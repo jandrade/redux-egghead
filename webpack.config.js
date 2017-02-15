@@ -1,11 +1,12 @@
-var path = require('path');
+import path from 'path';
 
 module.exports = {
   entry: './src/index.js',
   devtool: 'cheap-source-map',
   output: {
-    path: path.resolve(__dirname, 'docs/js/'),
-    filename: 'webpack.bundle.js'
+    path: path.resolve(__dirname, 'dist/'),
+    filename: 'webpack.bundle.js',
+    publicPath: '/docs/'
   },
   module: {
     rules: [
