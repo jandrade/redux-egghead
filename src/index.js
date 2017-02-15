@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
+import { render } from 'react-dom';
 
 import Root from './components/Root';
 
@@ -8,12 +8,7 @@ import configureStore from './configureStore';
 
 const store = configureStore();
 
-const render = () => {
-    ReactDOM.render(
-        <Root store={store} />
-        ,
-        document.getElementById('root')
-    );
-};
-
-render();
+render(
+  <Root store={store} />,
+  document.getElementById('root')
+);

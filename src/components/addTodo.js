@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { addTodo } from '../actions/todo';
@@ -6,24 +6,26 @@ import { addTodo } from '../actions/todo';
 /**
  * Presentational component
  */
-let AddTodo = ({ dispatch }) => {
-    let input;
+const AddTodo = ({ dispatch }) => {
+  let input;
 
-    return (
-        <div>
-            <input type="text" ref={node => {
-                input = node;
-            }} />
-            <button onClick={() => {
-                dispatch(addTodo(input.value));
-                input.value = '';
-            }}>
-                Add todo
-            </button>
-        </div>
-    );
+  return (
+    <form
+      onSubmit={() => {
+        dispatch(addTodo(input.value));
+        input.value = '';
+      }}
+    >
+      <input ref={(node) => { input = node; }} />
+      <button type="submit">
+        Add todo
+      </button>
+    </form>
+  );
 };
 
-AddTodo = connect()(AddTodo);
+AddTodo.propTypes = {
+  dispatch: PropTypes.func.isRequired
+};
 
-export default AddTodo;
+export default connect()(AddTodo);

@@ -5,8 +5,6 @@ import todos from './todo';
 /**
  * Root reducers
  */
-const reducers = combineReducers({
-    todos
-});
+const reducers = combineReducers({ todos });
 
 export default reducers;

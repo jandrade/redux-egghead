@@ -9,20 +9,20 @@ import rootReducer from './reducers/index';
 import { loadState, saveState } from './helpers/localStorage';
 
 const configureStore = () => {
-    const persistedState = loadState();
+  const persistedState = loadState();
 
-    const store = createStore(
-        rootReducer,
-        persistedState
-    );
+  const store = createStore(
+    rootReducer,
+    persistedState
+  );
 
-    store.subscribe(throttle(() => {
-        saveState({
-            todos: store.getState().todos
-        });
-    }, 1000));
+  store.subscribe(throttle(() => {
+    saveState({
+      todos: store.getState().todos
+    });
+  }, 1000));
 
-    return store;
-}
+  return store;
+};
 
 export default configureStore;
