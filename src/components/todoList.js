@@ -8,10 +8,7 @@ import Todo from './Todo';
  * @param {Array} todos
  * @param {Event} onTodoClick
  */
-const TodoList = ({
-    todos,
-    onTodoClick
-}) => (
+const TodoList = ({ todos, onTodoClick }) => (
     <ul>
         {todos.map(todo =>
             <Todo

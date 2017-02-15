@@ -11,10 +11,7 @@ import TodoList from './TodoList';
  * 
  * @return {Array} Filtered todos
  */
-const getVisibleTodos = (
-    todos,
-    filter
-) => {
+const getVisibleTodos = (todos, filter) => {
     switch(filter) {
         case 'all':
             return todos;
@@ -31,10 +28,7 @@ const getVisibleTodos = (
     }
 };
 
-const mapStateToProps = (
-    state,
-    { params }
-) => {
+const mapStateToProps = (state, { params }) => {
     return {
         todos: getVisibleTodos(
             state.todos,
@@ -43,22 +37,18 @@ const mapStateToProps = (
     };
 };
 
-const mapDispatchToProps = (
-    dispatch
-) => {
-    return {
-        onTodoClick: (id) => {
-            dispatch(toggleTodo(id));
-        }
-    }
-};
+// const mapDispatchToProps = (dispatch) => ({
+//     onTodoClick(id) {
+//         dispatch(toggleTodo(id));
+//     }
+// });
 
 /**
  * TodoList Container component 
  */
 const VisibleTodoList = withRouter(connect(
     mapStateToProps,
-    mapDispatchToProps
+    { onTodoClick: toggleTodo }
 )(TodoList));
 
 export default VisibleTodoList;
