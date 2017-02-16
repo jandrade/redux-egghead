@@ -11,7 +11,8 @@ const AddTodo = ({ dispatch }) => {
 
   return (
     <form
-      onSubmit={() => {
+      onSubmit={(e) => {
+        e.preventDefault();
         dispatch(addTodo(input.value));
         input.value = '';
       }}
