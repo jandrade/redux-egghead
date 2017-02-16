@@ -1,12 +1,8 @@
 // libs
 import { createStore } from 'redux';
-import throttle from 'lodash/throttle';
 
 // reducers
 import rootReducer from './reducers/index';
-
-// utils
-import { loadState, saveState } from './helpers/localStorage';
 
 const addLoggingToDispatch = (store) => {
   const rawDispatch = store.dispatch;
@@ -26,23 +22,28 @@ const addLoggingToDispatch = (store) => {
   };
 };
 
-const configureStore = () => {
-  const persistedState = loadState();
+const addPromiseSupportToDispatch = (store) => {
+  const rawDispatch = store.dispatch;
 
+  return (action) => {
+    if (typeof action.then === 'function') {
+      return action.then(rawDispatch);
+    } else {
+      return rawDispatch(action);
+    }
+  };
+};
+
+const configureStore = () => {
   const store = createStore(
-    rootReducer,
-    persistedState
+    rootReducer
   );
 
   if (process.env.NODE_ENV !== 'production') {
     store.dispatch = addLoggingToDispatch(store);
   }
 
-  store.subscribe(throttle(() => {
-    saveState({
-      todos: store.getState().todos
-    });
-  }, 1000));
+  store.dispatch = addPromiseSupportToDispatch(store);
 
   return store;
 };
