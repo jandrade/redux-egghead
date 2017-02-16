@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 
 import { getVisibleTodos } from '../reducers';
 import { toggleTodo } from '../actions/todo';
-import TodoList from './TodoList';
+import TodoList from '../components/TodoList';
 
 const mapStateToProps = (state, { params }) => ({
   todos: getVisibleTodos(state, params.filter || 'all')

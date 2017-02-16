@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import todos, * as fromTodos from './todo';
+import todos, * as fromTodos from './todos';
 
 /**
  * Root reducers
